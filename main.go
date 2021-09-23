@@ -2,35 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/antunesgabriel/bank_account_manager/accounts"
 )
 
-type Account struct {
-	holder string
-	agency int
-	number int
-	balance float64
-}
-
-func (c *Account) Withdraw (amount float64) string {
-
-	if amount > 0 && amount <= c.balance {
-		c.balance -= amount
-
-		return "Withdrawal made!"
-	} else {
-		return "Insufficient funds!"
-	}
-}
-
 func main() {
-	accountOne := Account{
-		holder: "Fantasma",
-		agency: 1113,
-		number: 4576543,
-		balance: 9560.05,
+	accountOne := accounts.Account{
+		Holder: "Fantasma",
+		Agency: 1113,
+		Number: 4576543,
+		Balance: 9560.05,
 	}
 
-	accountTwo := Account {
+	accountTwo := accounts.Account {
 		"Nana",
 		1113,
 		6789422,
@@ -39,16 +22,32 @@ func main() {
 
 	fmt.Println(accountOne, accountTwo)
 
-	var accountThree *Account
+	var accountThree *accounts.Account
 
-	accountThree = new(Account)
+	accountThree = new(accounts.Account)
 
-	accountThree.holder = "Gabriel"
-	accountThree.agency = 1113
-	accountThree.number = 4565652
-	accountThree.balance = 0.0
+	accountThree.Holder = "Gabriel"
+	accountThree.Agency = 1113
+	accountThree.Number = 4565652
+	accountThree.Balance = 0.0
 
 	fmt.Println(accountThree, *accountThree, &accountThree)
 	
-	fmt.Println(accountOne.Withdraw(560), accountOne)
+	fmt.Println(accountOne.Withdraw(560.05), accountOne)
+
+	balance, err := accountOne.Deposit(1000)
+
+	fmt.Println(balance, err, accountOne) // 10000
+
+	if err = accountOne.Transfer(50000, &accountTwo); err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(accountOne, accountTwo)
+
+	if err = accountOne.Transfer(1000, &accountTwo);  err != nil {
+		fmt.Println(err)
+ 	}
+
+	fmt.Println(accountOne, accountTwo)
 }
