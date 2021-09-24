@@ -3,22 +3,46 @@ package main
 import (
 	"fmt"
 	"github.com/antunesgabriel/bank_account_manager/accounts"
+	"github.com/antunesgabriel/bank_account_manager/clients"
+	"time"
 )
 
+type Pay interface {
+	Withdraw (amount float64) error
+}
+
+func PayBankSlip (account Pay, amount float64) error {
+	return account.Withdraw(amount)
+}
+
 func main() {
+	accountOneHolder := clients.Holder{
+		"Nana",
+		"0000000091",
+		time.Date(2018, time.January, 15, 0, 0, 0, 0, time.UTC),
+	}
+
 	accountOne := accounts.Account{
-		Holder: "Fantasma",
+		Holder: accountOneHolder,
 		Agency: 1113,
 		Number: 4576543,
-		Balance: 9560.05,
+	}
+
+	accountOne.Deposit(9560.05)
+
+	accountTwoHolder := clients.Holder{
+		"Nana",
+		"0000000091",
+		time.Date(2018, time.January, 15, 0, 0, 0, 0, time.UTC),
 	}
 
 	accountTwo := accounts.Account {
-		"Nana",
-		1113,
-		6789422,
-		9560.89,
+		Holder: accountTwoHolder,
+		Agency: 1112,
+		Number: 6789422,
 	}
+
+	accountTwo.Deposit(4000)
 
 	fmt.Println(accountOne, accountTwo)
 
@@ -26,10 +50,14 @@ func main() {
 
 	accountThree = new(accounts.Account)
 
-	accountThree.Holder = "Gabriel"
+	accountThree.Holder = clients.Holder{
+		"Gabriel",
+		"0000000091",
+		time.Date(1996, time.December, 22, 0, 0, 0, 0, time.UTC),
+	}
 	accountThree.Agency = 1113
 	accountThree.Number = 4565652
-	accountThree.Balance = 0.0
+	accountThree.Deposit(0)
 
 	fmt.Println(accountThree, *accountThree, &accountThree)
 	
@@ -49,5 +77,9 @@ func main() {
 		fmt.Println(err)
  	}
 
-	fmt.Println(accountOne, accountTwo)
+	fmt.Println("Saldo na conta 1 e 2", accountOne.SeeBalance(), accountTwo.SeeBalance())
+
+	PayBankSlip(&accountOne, 50)
+
+	fmt.Println("Saldo da conta 1", accountOne.SeeBalance())
 }
