@@ -77,9 +77,28 @@ func main() {
 		fmt.Println(err)
  	}
 
+	 marianaBirth := time.Date(1999, time.July, 3, 0, 0, 0, 0, time.UTC)
+
+	 holderSavings := clients.Holder{
+		 "Mariana",
+		 "0000000092",
+		 marianaBirth,
+	 }
+
+	 savingsAccount := accounts.Savings{
+		 Holder: holderSavings,
+		 Operation: 013,
+		 Number: 945945,
+	 }
+
+	 savingsAccount.Deposit(450)
+
 	fmt.Println("Saldo na conta 1 e 2", accountOne.SeeBalance(), accountTwo.SeeBalance())
 
 	PayBankSlip(&accountOne, 50)
+	 PayBankSlip(&savingsAccount, 400)
 
 	fmt.Println("Saldo da conta 1", accountOne.SeeBalance())
+
+	fmt.Println("Saldo da conta poupança", savingsAccount.SeeBalance())
 }
